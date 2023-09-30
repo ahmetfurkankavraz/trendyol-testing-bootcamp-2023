@@ -12,4 +12,5 @@ interface BookService {
     fun createBook(book: Book): Book
 
     fun deleteBook(id: UUID): Boolean
+    fun searchBook(title: String): List<Book>
 }

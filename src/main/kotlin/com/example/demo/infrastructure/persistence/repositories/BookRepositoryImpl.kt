@@ -24,4 +24,6 @@ class BookRepositoryImpl(private val jpaRepo: JpaBookRepository) : BookRepositor
         }
         return false
     }
+
+    override fun searchBook(title: String): List<Book> = jpaRepo.searchByTitle(title).stream().map { book -> book.toDomain() }.toList()
 }

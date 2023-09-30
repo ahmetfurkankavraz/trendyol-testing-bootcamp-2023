@@ -72,4 +72,80 @@ class BookServiceImplTest {
 
         assertEquals("A book with the title DuplicateTitle already exists.", exception.message)
     }
+
+    @Test
+    fun `test searchBook should return a list of books`(){
+        val title = "titleBook"
+        val books = listOf(
+            Book(UUID.randomUUID(), "name$title", "Author1", 2001),
+            Book(UUID.randomUUID(), title + "name", "Author2", 2002),
+        )
+
+        Mockito.`when`(bookRepository.searchBook(title)).thenReturn(books)
+
+        val result = bookService.searchBook(title)
+        assertEquals(2, result.size)
+        assertEquals(books, result)
+    }
+
+    @Test
+    fun `test searchBook should return a book`(){
+        val title = "titleBook"
+        val books = listOf(
+            Book(UUID.randomUUID(), "name$title", "Author1", 2001),
+        )
+
+        Mockito.`when`(bookRepository.searchBook(title)).thenReturn(books)
+
+        val result = bookService.searchBook(title)
+        assertEquals(1, result.size)
+        assertEquals(books, result)
+    }
+
+    @Test
+    fun `test searchBook should throw exception nothing found`(){
+        val title = "titleBook"
+        val books : List<Book> = listOf()
+
+        Mockito.`when`(bookRepository.searchBook(title)).thenReturn(books)
+
+        val exception = assertThrows<IllegalArgumentException> {
+            bookService.searchBook(title)
+        }
+
+        assertEquals("Sonuç bulunamadı", exception.message)
+    }
+
+    @Test
+    fun `test searchBook should throw exception input title is empty`(){
+        val title = ""
+
+        val exception = assertThrows<IllegalArgumentException> {
+            bookService.searchBook(title)
+        }
+
+        assertEquals("Lütfen bir arama kriteri girin", exception.message)
+    }
+
+    @Test
+    fun `test searchBook with more than 20 chars search title then throw exception`() {
+        val title = "a"
+
+        val exception = assertThrows<IllegalArgumentException> {
+            bookService.searchBook(title)
+        }
+
+        assertEquals("Lütfen 2 ila 20 karakter uzunluğu arasında bir değer giriniz", exception.message)
+    }
+
+    @Test
+    fun `test searchBook with less than 2 chars search title then throw exception`() {
+        val title = "as".repeat(10) + "a"
+
+        val exception = assertThrows<IllegalArgumentException> {
+            bookService.searchBook(title)
+        }
+
+        assertEquals("Lütfen 2 ila 20 karakter uzunluğu arasında bir değer giriniz", exception.message)
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.demo.domain.repositories
 
 import com.example.demo.domain.entities.Book
+import com.example.demo.infrastructure.persistence.entities.BookEntity
 import java.util.*
 
 interface BookRepository {
@@ -9,4 +10,5 @@ interface BookRepository {
     fun findBookByTitle(title: String): Book?
     fun saveBook(book: Book): Book
     fun deleteBookById(id: UUID): Boolean
+    fun searchBook(title: String): List<Book>
 }
